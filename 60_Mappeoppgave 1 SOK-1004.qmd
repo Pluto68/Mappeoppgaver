@@ -1,0 +1,209 @@
+Oppgave 1a
+
+inntektsulikheter er forskjellen mellom det de rike, de fattige og de som tjener i midten. Målt over en periode vanligvis over et år.
+
+Oppgave 1b
+
+Mulige grunner for at inntekten er fordelt ulikt i landet. Innvandring forklarer litt om hvorfor vi har en inntektsulikhet. Det kommer litt fra 1980 tallet også der tidelen av befolkningen med høyest inntekt hadde syv ganger så mye inntekt som tidelen med lavest inntekt
+
+oppgave 1c
+
+mulige grunner til at innteketen har ulikheter er for det meste politisk, vi kan svekke vekstevnene i samfunnet.
+
+Økte økonomi forskjeller kan også gjøre at samfunnet har et lavere tillitsnivå å dette kan gå negativt ut over økonomien.
+
+2a
+
+Gini-koeffisienten den måler inntektsulikthet innenfor et land eller befolkning. Utregning av Gini-koeffisienten er litt komplisert konsept men ikke umulig.
+
+Man ser på formuen og inntektet totalt i et land og etter det tar man å ser hvordan dette er fordelt på befolkningen. det vil være mellom 0 og 1 som blir resultatet.
+
+P90/P10 er et mål som brukes til å måle ulikhet innafor et land. Man sorterer befolkningen etter inntekt etter skatt. Så deler man dem i ti like store grupper.
+
+Det vil si at de blir gruppert etter hvor mye inntekt de har.
+
+p90/p10 de som har har høyere inntekt enn 90% av befolkningen. og de som har lavere inntekt enn 90% av befolkningen.
+
+Hvis tallet blir 2,2 vil det si at personen med høyere inntekt en 90% har 3,5 ganger så høyere inntekt en personen som har lavere inntekt en 90% av befolkningen.
+
+s80/s20 er veldig lik regning som p90/p10 eneste er at her tar du forholdstallet mellom gjennomsnittsinntekten på 20% av de som har lavere og høyere inntekt en befolkningen.
+
+Forskjellen mellom s80/s20 og p90/p10 er at med denne metoden (s80/s20) utelatter du ikke verdiene i ytterkant dette vil si de veldig rike eller veldig fattige. Dette gjør at det vil vise et høyere forholdstall.
+
+2b
+
+ved å bruke disse måleenheter får man et mål mellom de fattigste i et land og de rikeste, dette er en fin måte å finne ut hvor stor forskjell det er mellom de fattigste og de rikeste.
+
+Det som er problemet er hvis du skal finne ut hvor mye en i mellom de fattigeste og de rikeste i et land tjener.
+
+S80/s20 gir deg kanskje et litt mer utfyllende svar der at du bruker en større porsjon av befolkningen for å finne ut gjennomsnittsinntekten.
+
+Oppgave 3
+
+```{r}
+rm(list=ls())
+library(tidyverse)
+```
+
+```{r}
+url <- "https://raw.githubusercontent.com/uit-sok-1004-h22/uit-sok-1004-h22.github.io/main/data/oecd_data_nor.csv"
+
+oecd_n <- url %>% 
+  read_csv()
+```
+
+```{r}
+oecd_n %>% 
+  #filter(MEASURE =="IND") %>%
+  filter(MEASURE ==c("GINI", "GINIB", "GINIG")) %>%
+  ggplot(aes(x = Year, y=Value, color=MEASURE))+
+  geom_point()+ 
+  scale_x_continuous(breaks=c(2008, 2010, 2012, 2014, 2016, 2018))+ 
+  labs (title = " Inntektsulikhet for Norge, 2008-2019", y = "GINI", x= "Year")+ 
+  facet_wrap(~ factor (AGE, (levels=c("TOT", "WA", "OLD"))), 
+                       labeller = as_labeller(
+                         c("TOT" = "Alle", 
+                           "WA" = "Arbeidere", 
+                           "OLD" = "Pensjonert")))+ 
+  theme(legend.position = "bottom") 
+```
+
+3a
+
+-   Vi ser at ulikhetene GINI ulikhetene ikke er så veldig store. Vi ser at ulikhetene er litt større hos pensjonister, men dette kan vi se om vi endrer tabellen ved å sette \# foran linje 3 og fjerne \# fra linje to og kjøre koden og gjøre litt små endringer med titler og sånt. Da får vi en graf som viser innbygger tall å da får vi se at det er en del mindre pensjonister en folk som jobber.
+
+-   Forskjellen mellom de forskjellige GINI-koeffisientene. GINI er inntektsfordelingen over tid. GINIB er markedsinntekten det er summen av lønnsinntekt og kapitalinntekt. GINIG er bruttoinntekt det vil si lønn etter alt er blitt betalt.
+
+-   Forskjell og ulikhetene mellom de som jobber og de som er pensjonister er at pensjonistene har større bruttoinntekt en de som jobber. Vi ser en liten forskjell på GINI og GINIB også.
+
+-   
+
+3b
+
+```{r}
+oecd_n %>% 
+  filter(MEASURE ==c("P90P10", "S80S20")) %>%
+  ggplot(aes(x = Year, y=Value, color=MEASURE))+
+  geom_point()+ 
+  scale_x_continuous(breaks=c(2008, 2010, 2012, 2014, 2016, 2018))+ 
+  labs (title = " Inntektsulikhet for Norge, 2008-2019", y = "GINI", x= "Year")+ 
+  facet_wrap(~ factor (AGE, (levels=c("TOT", "WA", "OLD"))), 
+                       labeller = as_labeller(
+                         c("TOT" = "Alle", 
+                           "WA" = "Arbeidere", 
+                           "OLD" = "Pensjonert")))+ 
+  theme(legend.position = "bottom") 
+```
+
+Nei det er ikke det samme som i oppgave 3a. Vi ser en ulikhet på inntekten vi ser at de som jobber har en ulikhet på de fattigste på litt under 4 og går helt opp til og med 4.5 dette er hvis vi ser på S80S20 målene. Vi ser at det er litt mindre forskjell mellom fattige og rike pensjonister der ligger den mellom 2.5 og ca 3.25 dette er hvis vi ser på både P90P10 og S80S20.
+
+Oppgave 4
+
+```{r}
+url <- "https://raw.githubusercontent.com/uit-sok-1004-h22/uit-sok-1004-h22.github.io/main/data/skatt_troms_2015.RDS"
+
+skatt_troms_2015 <- url %>%
+  url() %>%
+  gzcon() %>% 
+  readRDS()
+```
+
+```{r}
+tromso <-  filter(skatt_troms_2015, kommnr == "1902")
+
+```
+
+4a
+
+```{r}
+tromso %>%
+mutate(inntekt_etter_skatt =inntekt - skatt) %>%
+  ggplot(aes(x = fodt)) %>%
+  + geom_point(aes(y=inntekt), color="red") %>%
+  + geom_point(aes(y=inntekt_etter_skatt), color="blue")
+
+```
+
+Vi ser at de røde prikkene er inntekt før skatt og alle de blå er etter skatt. Vi ser at inntektene er veldig forskjelige fra når de er født. Vi har et par punkter som viser at de tjente ganske greit i forhold til alle andre. Det virker som alle de som tjente en god del mer en alle andre måte betale en god del mer skatt.
+
+4b
+
+```{r}
+df <- tromso %>%
+  select(inntekt) %>% 
+  quantile(probs = seq(0,1, .01), na.rm=TRUE)
+
+
+df <- as_tibble(df)
+
+df <- df %>% 
+  add_column(Persentil=c(0:100))
+
+df <- df %>% 
+  rename(inntekt_fr_skatt=value)
+
+
+df %>% 
+  ggplot(aes(x=Persentil,y=inntekt_fr_skatt/1000)) +
+  geom_col()+
+  labs (title = "Inntektsfordeling i Tromso 2015 (fr skatt)",
+        y = "Inntekt (1000kr)", x= "Persentil")+
+  theme_minimal()
+```
+
+```{r}
+df <- tromso %>%
+  select(inntekt) %>% 
+  quantile(probs = seq(0,1, .01), na.rm=TRUE)
+
+
+df <- as_tibble(df)
+
+df <- df %>% 
+  add_column(Persentil=c(0:100))
+
+df <- df %>% 
+  rename(inntekt_etter_skatt=value)
+
+
+df %>% 
+  ggplot(aes(x=Persentil,y=inntekt_etter_skatt/1000)) +
+  geom_col()+
+  labs (title = "Inntektsfordeling i Tromso 2015 (Etter skatt)",
+        y = "Inntekt (1000kr)", x= "Persentil")+
+  theme_minimal()
+```
+
+Det vi ser i grafene er at inntektsulikhetene er ganske lav dette er helt til den kommer opp mot de høye persentil tallene da ser man på grafen at den bygger seg litt og litt opp helt til at den skyter i været. De høye persentilene skatter mye mer en de lave persentilnivåene dette er som nevnt tidligere at de som tjener mer skatter mer. De på den høye delen av persentilen har mye mer inntekt en de som ligger lavere på persentilen dette ser man klart å tydelig da de på den lave delen er såvidt synlig på grafen.
+
+4c
+
+```{r}
+library(gglorenz)
+```
+
+```{r}
+
+ggplot(tromso, aes(inntekt))+
+  stat_lorenz()+
+  annotate_ineq(tromso$inntekt)+ 
+  labs (x="andel av befolkningen", y= "andel av inntekt", title = "Lorenz-kurve, Tromso kommune 2015")+
+  theme_minimal()
+```
+
+```{r}
+tromso <- tromso %>%
+  mutate(inntekt_etter_skatt = inntekt - skatt)
+
+tromso[tromso < 0] <- 0
+
+
+
+ggplot(tromso, aes(inntekt_etter_skatt))+
+  stat_lorenz()+
+  annotate_ineq(tromso$inntekt_etter_skatt)+
+  labs (x="andel av befolkningen", y= "andel av inntekt", title = "Lorenz-kurve, Tromso kommune 2015")+
+  theme_minimal()
+```
+
+Det er ganske vanskelig å se forskjell mellom de to grafene, men hvis vi leser GINI tallet ser vi at det er en liten forskjell på de to grafene, men det er vanskelig å se forskjell på selve grafen. Vi ser at Tromsø ligger akkurat litt høyere på GINI skallaen i forhold til resten av Norge.
